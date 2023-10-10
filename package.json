@@ -1,6 +1,6 @@
 {
   "name": "simstruct",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "module": "src/index.ts",
   "main": "src/index.ts",
   "type": "module",
@@ -8,6 +8,7 @@
     "simstruct": "dist/index.js"
   },
   "devDependencies": {
+    "@swc/cli": "^0.1.62",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "bun-types": "latest",
