@@ -1,6 +1,6 @@
 import { Statement, TsType, VariableDeclaration } from '@swc/core'
-import Visitor from '@swc/core/Visitor'
-import { Comparable } from '../types'
+import { Visitor } from '@swc/core/Visitor.js'
+import { Comparable } from '../types.js'
 
 /**
  * This visitor extracts all statements that we want to be able to compare.

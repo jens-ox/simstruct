@@ -1,6 +1,6 @@
 import { TsTemplateLiteralType } from '@swc/core'
-import { Comparable, Options } from '../types'
-import { proxyMatch, siblingGroups } from './hasSibling'
+import { Comparable, Options } from '../types.js'
+import { proxyMatch, siblingGroups } from './hasSibling.js'
 
 const stringsMatch = (a: string, b: string) => a.replace(/^\s+|\s+$/g, '') === b.replace(/^\s+|\s+$/g, '')
 

@@ -1,6 +1,6 @@
 import { Options, Compiler, parse } from '@swc/core'
-import Visitor from '@swc/core/Visitor'
-import { File } from '../types'
+import { Visitor } from '@swc/core/Visitor.js'
+import { File } from '../types.js'
 
 const swcOptions: Options = {
   jsc: {

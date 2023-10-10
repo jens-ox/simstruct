@@ -1,7 +1,7 @@
 import { HasSpan } from '@swc/core'
-import { Candidate, Duplication, DuplicationMatrix, File } from '../types'
-import { isMatch } from './isMatch'
-import { getFilePart } from './getFilePart'
+import { Candidate, Duplication, DuplicationMatrix, File } from '../types.js'
+import { isMatch } from './isMatch.js'
+import { getFilePart } from './getFilePart.js'
 
 const isSame = (m1: Duplication, m2: Duplication) => m1.file === m2.file && m1.start === m2.start && m1.end === m2.end
 

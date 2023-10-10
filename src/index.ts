@@ -2,10 +2,10 @@
 
 import { readFile } from 'fs/promises'
 import { glob } from 'glob'
-import { FlattenVisitor } from './visitors/flatten'
-import { parseFile } from './utils/swc'
-import { comparator } from './utils/comparator'
-import { getFilePart } from './utils/getFilePart'
+import { FlattenVisitor } from './visitors/flatten.js'
+import { parseFile } from './utils/swc.js'
+import { comparator } from './utils/comparator.js'
+import { getFilePart } from './utils/getFilePart.js'
 
 // as long as top level await doesn't work everywhere
 ;(async () => {

@@ -1,5 +1,5 @@
-import { Comparable, Options } from '../types'
-import { isMatch } from './isMatch'
+import { Comparable, Options } from '../types.js'
+import { isMatch } from './isMatch.js'
 
 export const hasSibling = (needle?: Comparable, haystack?: Array<Comparable | undefined>): boolean => {
   if (!needle || !haystack) return true
