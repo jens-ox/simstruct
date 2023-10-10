@@ -8,6 +8,7 @@ import { comparator } from './utils/comparator.js'
 import { getFilePart } from './utils/getFilePart.js'
 
 // as long as top level await doesn't work everywhere
+import { Candidate } from './types.js'
 ;(async () => {
   const paths = await glob('**/*.{js,jsx,ts,tsx,mjs,cjs}', { nodir: true })
 
@@ -18,16 +19,14 @@ import { getFilePart } from './utils/getFilePart.js'
     })
   )
 
-  const candidates = (
-    await Promise.all(
-      files.map(async (file) => {
-        const visitor = new FlattenVisitor()
-        const offset = await parseFile(file, visitor)
-        visitor.fixOffsets(offset)
-        return visitor.comparableStatements.map((item) => ({ file: file.name, item }))
-      })
-    )
-  ).flat()
+  // step through files to get correct offsets
+  const candidates: Candidate[] = []
+  for (const file of files) {
+    const visitor = new FlattenVisitor()
+    const offset = await parseFile(file, visitor)
+    visitor.fixOffsets(offset)
+    candidates.push(...visitor.comparableStatements.map((item) => ({ file: file.name, item })))
+  }
 
   const matches = comparator(candidates, files)
 

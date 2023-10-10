@@ -8,15 +8,12 @@ const swcOptions: Options = {
       syntax: 'typescript',
       tsx: true
     },
-    target: 'es2022',
+    target: 'esnext',
     loose: false,
     minify: {
       compress: false,
       mangle: false
     }
-  },
-  module: {
-    type: 'es6'
   },
   minify: false,
   isModule: true
