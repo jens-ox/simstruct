@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
-import { readFile } from 'fs/promises'
+import { mkdir, readFile, writeFile } from 'fs/promises'
+import { join } from 'path'
 import { glob } from 'glob'
+import dprint from 'dprint-node'
 import { FlattenVisitor } from './visitors/flatten.js'
 import { parseFile } from './utils/swc.js'
 import { comparator } from './utils/comparator.js'
@@ -10,6 +12,7 @@ import { getFilePart } from './utils/getFilePart.js'
 // as long as top level await doesn't work everywhere
 import { Candidate } from './types.js'
 ;(async () => {
+  const outDir = join(process.cwd(), '.simstruct')
   const paths = await glob('**/*.{js,jsx,ts,tsx,mjs,cjs}', { nodir: true })
 
   const files = await Promise.all(
@@ -28,17 +31,25 @@ import { Candidate } from './types.js'
     candidates.push(...visitor.comparableStatements.map((item) => ({ file: file.name, item })))
   }
 
-  const matches = comparator(candidates, files)
-
-  const parsedMatches = matches.map((m) =>
+  const matches = comparator(candidates, files).map((m) =>
     m.map((d) => ({
       ...d,
-      snippet: getFilePart(
-        files.find((f) => f.name === d.file),
-        d
+      snippet: dprint.format(
+        'input.tsx',
+        getFilePart(
+          files.find((f) => f.name === d.file),
+          d
+        )
       )
     }))
   )
 
-  console.log(JSON.stringify(parsedMatches, null, 2))
+  // report results by writing them to disk
+  try {
+    await mkdir(outDir, { recursive: true })
+  } catch (_) {
+    console.log('output directory already exists')
+  }
+
+  await writeFile(join(outDir, 'out.json'), JSON.stringify(matches, null, 2))
 })()
