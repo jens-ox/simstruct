@@ -18,6 +18,8 @@ In your project's root directory, run
 npx simstruct
 ```
 
+This will create a `.simstruct` directory that includes reports on code duplication.
+
 ## Outlook
 
 This is a first release. The following fundamental things are missing:
