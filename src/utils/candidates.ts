@@ -18,11 +18,23 @@ export const getCandidates = async (files: File[]): Promise<Candidate[]> => {
   return candidates
 }
 
+const format = (fileName: string, snippet: string) => {
+  let formatted = snippet
+  try {
+    formatted = dprint.format(fileName, snippet)
+  } catch (_) {
+    console.warn('could not format snippet:')
+    console.warn(snippet)
+  }
+
+  return formatted
+}
+
 export const getMatches = (candidates: Candidate[], files: File[]) =>
   comparator(candidates, files).map((m) =>
     m.map((d) => ({
       ...d,
-      snippet: dprint.format(
+      snippet: format(
         d.file,
         getFilePart(
           files.find((f) => f.name === d.file),
