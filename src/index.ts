@@ -3,13 +3,8 @@
 import { mkdir, readFile, writeFile } from 'fs/promises'
 import { join } from 'path'
 import { glob } from 'glob'
-import dprint from 'dprint-node'
-import { FlattenVisitor } from './visitors/flatten.js'
-import { parseFile } from './utils/swc.js'
-import { comparator } from './utils/comparator.js'
-import { getFilePart } from './utils/getFilePart.js'
-import { Candidate } from './types.js'
 import { toHtml } from './toHtml.js'
+import { getCandidates, getMatches } from './utils/candidates.js'
 
 // as long as top level await doesn't work everywhere
 ;(async () => {
@@ -24,26 +19,9 @@ import { toHtml } from './toHtml.js'
   )
 
   // step through files to get correct offsets
-  const candidates: Candidate[] = []
-  for (const file of files) {
-    const visitor = new FlattenVisitor()
-    const offset = await parseFile(file, visitor)
-    visitor.fixOffsets(offset)
-    candidates.push(...visitor.comparableStatements.map((item) => ({ file: file.name, item })))
-  }
+  const candidates = await getCandidates(files)
 
-  const matches = comparator(candidates, files).map((m) =>
-    m.map((d) => ({
-      ...d,
-      snippet: dprint.format(
-        'input.tsx',
-        getFilePart(
-          files.find((f) => f.name === d.file),
-          d
-        )
-      )
-    }))
-  )
+  const matches = getMatches(candidates, files)
 
   // report results by writing them to disk
   try {

@@ -43,6 +43,7 @@ import {
   TsType,
   TsTypeAnnotation,
   TsTypeElement,
+  TsTypeParameter,
   TsTypeParameterDeclaration,
   TsTypeParameterInstantiation,
   VariableDeclaration,
@@ -103,6 +104,7 @@ export type Comparable =
   | ClassMember
   | Decorator
   | ModuleItem
+  | TsTypeParameter
 
 export type Candidate = {
   file: string

@@ -84,6 +84,19 @@ export const isMatch = (
     case 'VariableDeclaration':
       c = candidate as typeof base
       return siblingGroups(base.declarations, c.declarations)
+    case 'FunctionDeclaration':
+      c = candidate as typeof base
+      return proxyMatch([
+        [base.async, c.async],
+        [base.body, c.body],
+        [base.declare, c.declare],
+        [base.decorators, c.decorators],
+        [base.generator, c.generator],
+        [base.identifier, c.identifier],
+        [base.params, c.params],
+        [base.returnType, c.returnType],
+        [base.typeParameters, c.typeParameters]
+      ])
     case 'VariableDeclarator':
       c = candidate as typeof base
       return proxyMatch([
@@ -99,6 +112,9 @@ export const isMatch = (
         [base.callee, c.callee],
         [base.arguments.map((e) => e.expression), c.arguments.map((e) => e.expression)]
       ])
+    case 'TsConstAssertion':
+      c = candidate as typeof base
+      return isMatch(base.expression, c.expression)
     case 'TsModuleBlock':
       c = candidate as typeof base
       return siblingGroups(base.body, c.body)
@@ -111,6 +127,13 @@ export const isMatch = (
     case 'TsArrayType':
       c = candidate as typeof base
       return isMatch(base.elemType, c.elemType)
+    case 'TsMappedType':
+      c = candidate as typeof base
+      return proxyMatch([
+        [base.nameType, c.nameType],
+        [base.typeAnnotation, c.typeAnnotation],
+        [base.typeParam, c.typeParam]
+      ])
     case 'TsNonNullExpression':
       c = candidate as typeof base
       return isMatch(base.expression, c.expression)
@@ -138,7 +161,7 @@ export const isMatch = (
       return isMatch(base.typeAnnotation, c.typeAnnotation)
     case 'TsIndexSignature':
       c = candidate as typeof base
-      return base.params.length === c.params.length && base.params.every((p, i) => isMatch(p, c.params[i]))
+      return proxyMatch([[base.params, c.params]])
     case 'TsTypeAnnotation':
       c = candidate as typeof base
       return isMatch(base.typeAnnotation, c.typeAnnotation)
@@ -155,6 +178,12 @@ export const isMatch = (
       return proxyMatch([
         [base.op, c.op],
         [base.typeAnnotation, c.typeAnnotation]
+      ])
+    case 'TsTypeParameter':
+      c = candidate as typeof base
+      return proxyMatch([
+        [base.name, c.name],
+        [base.constraint, c.constraint]
       ])
     case 'TsIndexedAccessType':
       c = candidate as typeof base
