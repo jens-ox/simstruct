@@ -25,6 +25,5 @@ This will create a `.simstruct` directory that includes reports on code duplicat
 This is a first release. The following fundamental things are missing:
 
 - add tests
-- add some kind of reporting instead of dumping the results to stdout
 - add a configurable minimum snippet length to not detect every single ternary operation as a duplicate
 - add a configurable minimum Levenshtein distance for strings to enable filtering of unrelated code
