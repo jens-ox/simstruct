@@ -8,9 +8,10 @@ import { FlattenVisitor } from './visitors/flatten.js'
 import { parseFile } from './utils/swc.js'
 import { comparator } from './utils/comparator.js'
 import { getFilePart } from './utils/getFilePart.js'
+import { Candidate } from './types.js'
+import { toHtml } from './toHtml.js'
 
 // as long as top level await doesn't work everywhere
-import { Candidate } from './types.js'
 ;(async () => {
   const outDir = join(process.cwd(), '.simstruct')
   const paths = await glob('**/*.{js,jsx,ts,tsx,mjs,cjs}', { nodir: true })
@@ -52,4 +53,7 @@ import { Candidate } from './types.js'
   }
 
   await writeFile(join(outDir, 'out.json'), JSON.stringify(matches, null, 2))
+  await writeFile(join(outDir, 'out.html'), toHtml(matches))
+
+  console.log('results written to .simstruct')
 })()

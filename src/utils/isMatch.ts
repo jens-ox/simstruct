@@ -74,6 +74,13 @@ export const isMatch = (
     case 'TemplateElement':
       c = candidate as typeof base
       return base.tail === c.tail && base.cooked === c.cooked
+    case 'TaggedTemplateExpression':
+      c = candidate as typeof base
+      return proxyMatch([
+        [base.tag, c.tag],
+        [base.typeParameters, c.typeParameters],
+        [base.template, c.template]
+      ])
     case 'VariableDeclaration':
       c = candidate as typeof base
       return siblingGroups(base.declarations, c.declarations)
@@ -101,6 +108,9 @@ export const isMatch = (
     case 'TsLiteralType':
       c = candidate as typeof base
       return isMatch(base.literal, c.literal)
+    case 'TsArrayType':
+      c = candidate as typeof base
+      return isMatch(base.elemType, c.elemType)
     case 'TsNonNullExpression':
       c = candidate as typeof base
       return isMatch(base.expression, c.expression)
@@ -126,6 +136,9 @@ export const isMatch = (
       c = candidate as typeof base
       if (base.optional !== c.optional) return false
       return isMatch(base.typeAnnotation, c.typeAnnotation)
+    case 'TsIndexSignature':
+      c = candidate as typeof base
+      return base.params.length === c.params.length && base.params.every((p, i) => isMatch(p, c.params[i]))
     case 'TsTypeAnnotation':
       c = candidate as typeof base
       return isMatch(base.typeAnnotation, c.typeAnnotation)
@@ -137,6 +150,12 @@ export const isMatch = (
       c = candidate as typeof base
       if (!isMatch(base.exprName, c.exprName)) return false
       return isMatch(base.typeArguments, c.typeArguments)
+    case 'TsTypeOperator':
+      c = candidate as typeof base
+      return proxyMatch([
+        [base.op, c.op],
+        [base.typeAnnotation, c.typeAnnotation]
+      ])
     case 'TsIndexedAccessType':
       c = candidate as typeof base
       return isMatch(base.objectType, c.objectType) && isMatch(base.indexType, c.indexType)
@@ -269,6 +288,12 @@ export const isMatch = (
       return proxyMatch([
         [base.optional, c.optional],
         [base.elements, c.elements]
+      ])
+    case 'AssignmentPattern':
+      c = candidate as typeof base
+      return proxyMatch([
+        [base.left, c.left],
+        [base.right, c.right]
       ])
     case 'ForOfStatement':
       c = candidate as typeof base
